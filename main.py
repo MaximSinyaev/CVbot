@@ -4,7 +4,7 @@ import logging
 import telebot
 
 from data import messages, buttons
-from handlers.message_constructors import create_keyboard, add_back_button
+from handlers.keyboard_constructors import create_keyboard, add_back_button
 from my_config import config
 
 # Initializing bot and logging
@@ -15,9 +15,10 @@ bot = telebot.TeleBot(config.TOKEN)
 bot.remove_webhook()
 bot.set_webhook(url=config.AWS_URL)
 
-
 # Const data
 sections_with_reverse_btn = ['education', 'links', 'education']
+
+
 # Setting up Bot info
 # bot.set_chat_description(339993031, "This is my bot")
 # bot.set_chat_title(339993031, "CVbot")
@@ -32,15 +33,12 @@ def lambda_handler(event, context):
         }
     update = telebot.types.Update.de_json(json.dumps(request))
     message = update.message
-    print(update)
-    bot.process_new_updates([update])
     if update.message:
         handle_message(message)
     elif update.callback_query:
         handle_query(update.callback_query)
     else:
         bot.send_message(message.chat.id, messages.help)
-    print(config.TOKEN)
     return {
         'statusCode': 200
     }
@@ -49,6 +47,8 @@ def lambda_handler(event, context):
 def handle_message(message):
     if message.text[0] == '/':
         handle_command(message)
+    else:
+        bot.send_message(message.chat.id, messages.help)
 
 
 def post_start_message(chat_id):
@@ -73,6 +73,8 @@ def handle_query(query):
     elif data == 'back':
         keyboard = create_keyboard(**buttons.start_buttons)
         message = messages.greetings
+    elif data == 'experience':
+        message = messages.experience
     if data != 'back':
         keyboard = add_back_button(keyboard)
     bot.send_message(chat_id, message, reply_markup=keyboard)
