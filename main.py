@@ -40,6 +40,7 @@ def lambda_handler(event, context):
         handle_query(update.callback_query)
     else:
         bot.send_message(message.chat.id, messages.help)
+    print(config.TOKEN)
     return {
         'statusCode': 200
     }
@@ -62,7 +63,7 @@ def handle_query(query):
     keyboard = None
     message = "Ooops! Is it error???"
     if data == 'projects':
-        keyboard = create_keyboard(**buttons.project_buttons)
+        keyboard = create_keyboard(btn_type='url', **buttons.project_buttons)
         message = messages.projects
     elif data == 'education':
         message = messages.education
