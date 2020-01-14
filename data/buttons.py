@@ -13,5 +13,5 @@ start_buttons = {
 project_buttons = {
     'https://github.com/MaximSinyaev/ft_ls': 'ft_ls: C',
     'https://github.com/MaximSinyaev/TextBrowser': 'Text Browser: Python',
-    '': 'Resume bot: Python'
+    'https://github.com/MaximSinyaev/CVbot': 'Resume bot: Python'
 }
