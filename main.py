@@ -1,5 +1,6 @@
 import json
 import logging
+from typing import Dict
 
 import telebot
 
@@ -16,37 +17,35 @@ bot.remove_webhook()
 bot.set_webhook(url=config.AWS_URL)
 
 # Const data
-sections_with_reverse_btn = ['education', 'links', 'education']
-
+http_success = {'statusCode': 200}
+http_error = {'statusCode': 403}
 
 # Setting up Bot info
-# bot.set_chat_description(339993031, "This is my bot")
-# bot.set_chat_title(339993031, "CVbot")
+updates_list = list()
 
 
 def lambda_handler(event, context):
     try:
         request = json.loads(event['body'])
     except Exception:
-        return {
-            'statusCode': 403
-        }
+        return http_error
     update = telebot.types.Update.de_json(json.dumps(request))
-    message = update.message
+    print(update)
     if update.message:
-        handle_message(message)
+        handle_message(update)
     elif update.callback_query:
         handle_query(update.callback_query)
     else:
-        bot.send_message(message.chat.id, messages.help)
-    return {
-        'statusCode': 200
-    }
+        bot.send_message(update.chat.id, messages.help)
+    return http_success
 
 
-def handle_message(message):
-    if message.text[0] == '/':
-        handle_command(message)
+def handle_message(update):
+    message = update.message
+    if message.content_type == 'text' and message.text[0] == '/':
+        handle_command(message, update.update_id)
+    elif message.content_type == 'sticker':
+        bot.reply_to(message, message.sticker.emoji)
     else:
         bot.send_message(message.chat.id, messages.help)
 
@@ -75,15 +74,19 @@ def handle_query(query):
         message = messages.greetings
     elif data == 'experience':
         message = messages.experience
+    elif data == 'contacts':
+        message = messages.contacts
     if data != 'back':
         keyboard = add_back_button(keyboard)
     bot.send_message(chat_id, message, reply_markup=keyboard)
 
 
-def handle_command(message):
+def handle_command(message, update_id):
     command = message.text[1:]
     if command == 'start':
-        post_start_message(message.chat.id)
+        if update_id not in updates_list:
+            post_start_message(message.chat.id)
+            updates_list.append(update_id)
     elif command == 'reset':
         post_start_message(message.chat.id)
     else:

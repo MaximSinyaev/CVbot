@@ -5,7 +5,7 @@ def create_keyboard(btn_type='callback', **kwargs):
     '''
     Creates callback buttons for telegram bot using telebot.types
     :param kwargs: dictionary in format {callback_data/url: text}
-    :param type: callback or url button
+    :param btn_type: callback or url button
     :return: keyboard
     '''
     keyboard = types.InlineKeyboardMarkup()

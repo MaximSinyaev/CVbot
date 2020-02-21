@@ -9,7 +9,8 @@ start_buttons = {
     'education': '📚 Образование',
     'experience': '👨‍🔬 Опыт работы',
     'projects': '✍ Мои проекты',
-    'links': '🔗 Ссылки'
+    'links': '🔗 Ссылки',
+    'contacts': '📲 Контакты'
 }
 project_buttons = {
     'https://github.com/MaximSinyaev/ft_ls': 'ft_ls: C Ⓒ',
