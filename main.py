@@ -1,6 +1,5 @@
 import json
 import logging
-from typing import Dict
 
 import telebot
 
@@ -31,6 +30,10 @@ def lambda_handler(event, context):
         return http_error
     update = telebot.types.Update.de_json(json.dumps(request))
     print(update)
+    if update.update_id not in updates_list:
+        updates_list.append(update.update_id)
+    else:
+        return http_success
     if update.message:
         handle_message(update)
     elif update.callback_query:
@@ -43,7 +46,7 @@ def lambda_handler(event, context):
 def handle_message(update):
     message = update.message
     if message.content_type == 'text' and message.text[0] == '/':
-        handle_command(message, update.update_id)
+        handle_command(message)
     elif message.content_type == 'sticker':
         bot.reply_to(message, message.sticker.emoji)
     else:
@@ -74,19 +77,22 @@ def handle_query(query):
         message = messages.greetings
     elif data == 'experience':
         message = messages.experience
+    elif data == 'expertise':
+        message = messages.expertise
     elif data == 'contacts':
         message = messages.contacts
     if data != 'back':
         keyboard = add_back_button(keyboard)
-    bot.send_message(chat_id, message, reply_markup=keyboard)
+    bot.edit_message_text(text=message, chat_id=chat_id,
+                          message_id=query.message.message_id,
+                          reply_markup=keyboard)
+    # bot.send_message(chat_id, message, reply_markup=keyboard)
 
 
-def handle_command(message, update_id):
+def handle_command(message):
     command = message.text[1:]
     if command == 'start':
-        if update_id not in updates_list:
-            post_start_message(message.chat.id)
-            updates_list.append(update_id)
+        post_start_message(message.chat.id)
     elif command == 'reset':
         post_start_message(message.chat.id)
     else:
