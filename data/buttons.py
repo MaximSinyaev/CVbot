@@ -15,9 +15,9 @@ start_buttons = {
 }
 project_buttons = {
     'https://github.com/MaximSinyaev/CupIT2020-DataScience':
-        'CupIT 2020 DataScience 💫',
-    'https://github.com/MaximSinyaev/master_degree': 'Master degree ML 💫',
-    'https://github.com/MaximSinyaev/mipt_pk_bot': 'MIPT_bot 🐍🚀',
-    'https://github.com/MaximSinyaev/CVbot': 'CV-bot 🐍🚀',
+        'CupIT 2020 DataScience 🚀',
+    'https://github.com/MaximSinyaev/master_degree': 'Master degree ML 🚀',
+    'https://github.com/MaximSinyaev/mipt_pk_bot': 'MIPT_bot 🐍',
+    'https://github.com/MaximSinyaev/CVbot': 'CV-bot 🐍',
     'https://github.com/MaximSinyaev/ft_ls': 'ft_ls Ⓒ',
 }
